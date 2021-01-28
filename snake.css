@@ -6,7 +6,7 @@
 body {
     background: black;
     box-sizing: border-box;
-    transition: 2s;
+    transition: 1s;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
