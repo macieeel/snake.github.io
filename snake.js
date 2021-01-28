@@ -55,6 +55,8 @@ function Snake(height, width, size) {
             area.appendChild(comida.elemento)
 
             contador++
+            teste = contador % 40 > 19
+            if(contador % 20 == 0) TrocaCor()
             
             this.elemento.push(novoElemento('div', 'snake'))
             if(teste) this.elemento[contador].style.background = 'black'
@@ -78,6 +80,7 @@ function Snake(height, width, size) {
                     this.setY(this.getY(contador-1), contador)            
                 }
 
+                teste = contador % 40 > 19
                 TrocaCor()
 
                 document.body.style.background = 'gold'
@@ -139,6 +142,8 @@ function GeraCor(cores) {
 
 function TrocaCor() {
 
+    teste = contador % 40 > 19
+
     const cobra = document.querySelectorAll('.snake')
     const info = document.querySelectorAll('.troca')
 
@@ -162,10 +167,7 @@ function Start() {
 
     const temporizador = setTimeout(() => {     
         
-        teste = contador % 40 > 19
-        
-        snake.animation()
-        if(contador % 20 == 0) TrocaCor()
+        snake.animation()        
 
         if(!bateu(snake, contador)) Start()
         else {
