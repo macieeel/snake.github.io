@@ -8,7 +8,7 @@ function SpecialFood(height, width, size) {
     this.elemento = novoElemento('img', 'specialFood')
     this.elemento.style.left = `${(Math.floor(Math.random()*(width/size)))*size}px`
     this.elemento.style.bottom = `${(Math.floor(Math.random()*(height/size)))*size}px`
-    this.elemento.src = '/star.png'
+    this.elemento.src = 'star.png'
 
     this.getX = () => parseInt(this.elemento.style.left.split('px')[0])
     this.getY = () => parseInt(this.elemento.style.bottom.split('px')[0])
