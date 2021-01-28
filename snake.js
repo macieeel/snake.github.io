@@ -202,7 +202,7 @@ function Fruit() {
 function Points() {
 
     document.querySelector('.points').innerHTML = contador      
-    document.querySelector('.highscore').innerHTML = highscore 
+    document.querySelector('.highscore').innerHTML = `Recorde: ${highscore}` 
 
     if (contador > highscore) {
         highscore = contador
@@ -210,9 +210,11 @@ function Points() {
             first = false
 
                 document.body.style.background = 'red'
+                document.querySelector('.recorde').style.opacity = 1
                 setTimeout(() => {
                     document.body.style.background = contador % 40 > 19 ? 'white' : 'black'
-                }, 1000)
+                    document.querySelector('.recorde').style.opacity = 0
+                }, 1500)
 
 
         }
