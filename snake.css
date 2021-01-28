@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;    
+}
+
+body {
+    background: black;
+    box-sizing: border-box;
+    transition: 2s;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+.tittle {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    margin: 50px auto 10px;
+    font-size: 50px;
+    color: white;
+}
+
+.subtittle {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    margin: 0 auto 50px;
+    font-size: 15;
+    color: white;
+}
+
+.game {
+    width: 700px;
+    height: 400px;
+    margin: auto;
+    background: linear-gradient(rgb(124, 124, 124), rgb(85, 85, 85));
+    position: relative;
+}
+
+.snake {
+    width: 20px;
+    height: 20px;
+    background: white;
+    position: absolute;
+    z-index: 100;
+}
+
+.food {
+    width: 20px;
+    height: 20px;
+    background: red;
+    position: absolute;
+    border-radius: 10px;
+}
+
+.specialFood {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    visibility: hidden;
+}
+
+.points {
+    position: absolute;
+    bottom: 400px;
+    right: 5px;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+}
+
+.gameOver {
+    border-radius: 10px;
+    width: 400px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    background: black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    visibility: hidden;
+    z-index: 100;
+}
+
+.titulo {
+    font-size: 50px;
+    margin: 20px;
+}
+
+.num {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.espaco {
+    font-size: 14px;
+    font-weight: 100;
+    margin: 20px;
+}
