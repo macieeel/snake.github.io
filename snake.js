@@ -25,15 +25,65 @@ function Food(height, width, size) {
     this.getY = () => parseInt(this.elemento.style.bottom.split('px')[0])
 }
 
+function Cresce(snake) {
+    snake.elemento.push(novoElemento('div', 'snake'))
+    if(contador % 40 > 19) snake.elemento[contador].style.background = 'black'
+
+    snake.setX(snake.getX(contador-1), contador)
+    snake.setY(snake.getY(contador-1), contador)
+    area.appendChild(snake.elemento[contador])
+}
+
+function Comer(snake) {
+
+    if(snake.getX(0) == food.getX() && snake.getY(0) == food.getY()) {
+
+        area.removeChild(food.elemento)
+
+        food = new Food(400, 700, 20)
+        area.appendChild(food.elemento)
+
+        contador++
+        if(contador % 20 == 0) TrocaCor()
+
+        Cresce(snake)
+    }
+}
+
+function ComerSpecial(snake) {
+
+    if(snake.getX(0) == scomida.getX() && snake.getY(0) == scomida.getY()) {
+    
+        area.removeChild(scomida.elemento)
+        s = false
+
+        for(let i = 0; i < 5; i++) {
+            contador++
+            Cresce(snake)          
+        }
+
+        TrocaCor()
+
+        document.body.style.background = 'gold'
+        setTimeout(() => {
+            document.body.style.background = contador % 40 > 19 ? 'white' : 'black'
+        }, 400);
+    }
+}
+
 function Snake(height, width, size) {
-
-    let direction
+    
     this.elemento = [novoElemento('div', 'snake')]
-
+    
     this.getX = n => parseInt(this.elemento[n].style.left.split('px')[0])
     this.setX = (x, n) => this.elemento[n].style.left = `${x}px`
     this.getY = n => parseInt(this.elemento[n].style.bottom.split('px')[0])
     this.setY = (y, n) => this.elemento[n].style.bottom = `${y}px`
+    
+    this.setX((Math.floor(Math.random()*(width/size)))*size, 0)
+    this.setY((Math.floor(Math.random()*(height/size)))*size, 0)
+
+    let direction
 
     window.addEventListener('keydown', e => {
         switch(e.key) {
@@ -43,53 +93,15 @@ function Snake(height, width, size) {
             case 'd': case 'ArrowRight': if(direction != 'left') direction = 'right'; break
         }
     })
+    
+    this.animation = (snake, food) => {
 
-    this.animation = () => {
         let newY
         let newX
 
-        if(this.getX(0) == comida.getX() && this.getY(0) == comida.getY()) {
+        Comer(snake)
 
-            area.removeChild(comida.elemento)
-            comida = new Food(400, 700, 20)
-            area.appendChild(comida.elemento)
-
-            contador++
-            teste = contador % 40 > 19
-            if(contador % 20 == 0) TrocaCor()
-            
-            this.elemento.push(novoElemento('div', 'snake'))
-            if(teste) this.elemento[contador].style.background = 'black'
-            area.appendChild(this.elemento[contador])
-            this.setX(this.getX(contador-1), contador)
-            this.setY(this.getY(contador-1), contador)
-        }
-
-        if(s) {
-
-            if(this.getX(0) == scomida.getX() && this.getY(0) == scomida.getY()) {
-    
-                area.removeChild(scomida.elemento)
-                s = false
-    
-                for(let i = 0; i < 5; i++) {
-                    contador++
-                    this.elemento.push(novoElemento('div', 'snake'))
-                    area.appendChild(this.elemento[contador])
-                    this.setX(this.getX(contador-1), contador)
-                    this.setY(this.getY(contador-1), contador)            
-                }
-
-                teste = contador % 40 > 19
-                TrocaCor()
-
-                document.body.style.background = 'gold'
-                setTimeout(() => {
-                    document.body.style.background = teste ? 'white' : 'black'
-                }, 400);
-            }
-
-        }
+        if(s) ComerSpecial(snake, scomida)
 
         switch(direction) {
             case 'up': newY = this.getY(0) + size; break
@@ -98,9 +110,6 @@ function Snake(height, width, size) {
             case 'left': newX = this.getX(0) - size; break
         }
 
-        const maxHeight = height - size
-        const maxWidht = width - size
-
         for(let i = contador; i > 0; i--) {
 
             this.setX(this.getX(i-1), i)
@@ -108,22 +117,16 @@ function Snake(height, width, size) {
         }
 
         if (newY < 0) this.setY(height - size, 0)
-        else if (newY > maxHeight) this.setY(0, 0)
+        else if (newY > height - size) this.setY(0, 0)
         else this.setY(newY, 0)
 
         if (newX < 0) this.setX(width - size, 0)
-        else if (newX > maxWidht) this.setX(0, 0)
+        else if (newX > width - size) this.setX(0, 0)
         else this.setX(newX, 0)
-
-        document.querySelector('.points').innerHTML = contador
     }
-
-    this.setX((Math.floor(Math.random()*(width/size)))*size, 0)
-    this.setY((Math.floor(Math.random()*(height/size)))*size, 0)
-
 }
 
-function bateu(cobra, n) {
+function Bateu(cobra, n) {
 
     let bateu = false
     for(let i = 1; i <= n; i++) {
@@ -142,73 +145,134 @@ function GeraCor(cores) {
 
 function TrocaCor() {
 
-    teste = contador % 40 > 19
+    resto = contador % 40 > 19
 
     const cobra = document.querySelectorAll('.snake')
     const info = document.querySelectorAll('.troca')
 
-    document.body.style.background = teste ? 'white' : 'black'
-    cobra.forEach(element => element.style.background = teste ? 'black' : 'white')
-    info.forEach(element => element.style.color = teste ? 'black' : 'white')
+    document.body.style.background = resto ? 'white' : 'black'
+    cobra.forEach(element => element.style.background = resto ? 'black' : 'white')
+    info.forEach(element => element.style.color = resto ? 'black' : 'white')
 }
 
-let s = false
-let contador = 0
-let teste = false
-
-let comida = new Food(400, 700, 20)
-const snake = new Snake(400, 700, 20)
-const area = document.querySelector('.game')
-area.appendChild(snake.elemento[0])
-area.appendChild(comida.elemento)
 
 
-function Start() {
+function Start(snake) {
+    
+    if(!Bateu(snake, contador)) {
 
-    const temporizador = setTimeout(() => {     
-        
-        snake.animation()        
+        setTimeout(() => {     
+            
+            snake.animation(snake)    
+            
+            Points()                
 
-        if(!bateu(snake, contador)) Start()
-        else {
-            document.querySelector('.gameOver').style.visibility = 'visible'
-            document.querySelector('.num').innerHTML = contador
-
-            window.addEventListener('keypress', e => {
-                if(e.key = 'space') document.location.reload()
-            })
-        }
-
-    }, 80 - contador/3)
-
+            Start(snake)
+            
+        }, 80 - contador/3)
+    
+    }   
+    else Restart()
 }
 
 function Fruit() {
-    
-    const fruit = setInterval(() => {  
 
-        if(bateu(snake, contador)) clearInterval(fruit)
+    fruit = setInterval(() => {
 
         scomida = new SpecialFood(400, 700, 20)
-        area.appendChild(scomida.elemento)   
+        area.appendChild(scomida.elemento)
         s = true
 
         setInterval(() => {
             scomida.elemento.style.visibility = 'visible'
-            setTimeout(() => scomida.elemento.style.visibility = 'hidden', 500)
+            setTimeout(() => scomida.elemento.style.visibility = 'hidden', 400)
 
         }, 1000)
-        
+
         setTimeout(() => {
-            if(s) {
+            if (s) {
                 area.removeChild(scomida.elemento)
                 s = false
             }
-        }, 5000)                
-        
-    }, 10000)    
+        }, 5000)
+
+    }, 10000)
 }
 
-Fruit()
-Start()
+function Points() {
+
+    document.querySelector('.points').innerHTML = contador      
+    document.querySelector('.highscore').innerHTML = highscore 
+
+    if (contador > highscore) {
+        highscore = contador
+        if (first) {
+            first = false
+
+                document.body.style.background = 'red'
+                setTimeout(() => {
+                    document.body.style.background = contador % 40 > 19 ? 'white' : 'black'
+                }, 1000)
+
+
+        }
+    }
+}
+
+let fruit
+let s = false
+let contador = 0
+let highscore = 0
+let first = false
+
+
+let food = new Food(400, 700, 20)
+let snake = new Snake(400, 700, 20)
+const area = document.querySelector('.game')
+
+
+function Restart() {
+
+    clearInterval(fruit)
+
+    document.querySelector('.gameOver').style.opacity = '1'
+
+    if(contador > highscore) highscore = contador
+    document.querySelector('.num').innerHTML = contador
+    document.querySelector('.high').innerHTML = highscore   
+
+    const cobra = document.querySelectorAll('.snake')
+    cobra.forEach(element => area.removeChild(element))
+    area.removeChild(food.elemento)            
+
+    window.addEventListener('keyup', teste)
+}
+    
+    
+const teste =  event => {
+
+    if (event.code === 'Space') {
+
+        document.querySelector('.gameOver').style.opacity = '0'             
+        contador = 0
+        first = true
+        TrocaCor()
+        Game()
+    }  
+}
+    
+function Game() {   
+        
+    window.removeEventListener('keyup', teste)     
+        
+    area.style.opacity = 1
+    snake = new Snake(400, 700, 20)
+    food = new Food(400, 700, 20)
+    area.appendChild(snake.elemento[0])
+    area.appendChild(food.elemento)
+    Fruit()
+    Start(snake)
+}
+
+Game()
 
