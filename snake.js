@@ -57,6 +57,7 @@ function Snake(height, width, size) {
             contador++
             
             this.elemento.push(novoElemento('div', 'snake'))
+            if(teste) this.elemento[contador].style.background = 'black'
             area.appendChild(this.elemento[contador])
             this.setX(this.getX(contador-1), contador)
             this.setY(this.getY(contador-1), contador)
@@ -76,6 +77,13 @@ function Snake(height, width, size) {
                     this.setX(this.getX(contador-1), contador)
                     this.setY(this.getY(contador-1), contador)            
                 }
+
+                TrocaCor()
+
+                document.body.style.background = 'gold'
+                setTimeout(() => {
+                    document.body.style.background = teste ? 'white' : 'black'
+                }, 400);
             }
 
         }
@@ -129,28 +137,19 @@ function GeraCor(cores) {
     return cores[cor]
 }
 
-function TrocaCor(num) {
-    let cor1, cor2
-
-    if(num == 1) {
-        cor1 = 'black'
-        cor2 = 'white'
-    } else {
-        cor1 = 'white'
-        cor2 = 'black'
-    } 
+function TrocaCor() {
 
     const cobra = document.querySelectorAll('.snake')
-    cobra.forEach(element => element.style.background = cor1)
-
-    document.body.style.background = cor2
-
     const info = document.querySelectorAll('.troca')
-    info.forEach(element => element.style.color = cor1)
+
+    document.body.style.background = teste ? 'white' : 'black'
+    cobra.forEach(element => element.style.background = teste ? 'black' : 'white')
+    info.forEach(element => element.style.color = teste ? 'black' : 'white')
 }
 
 let s = false
 let contador = 0
+let teste = false
 
 let comida = new Food(400, 700, 20)
 const snake = new Snake(400, 700, 20)
@@ -161,12 +160,12 @@ area.appendChild(comida.elemento)
 
 function Start() {
 
-    const temporizador = setTimeout(() => {
+    const temporizador = setTimeout(() => {     
+        
+        teste = contador % 40 > 19
+        
         snake.animation()
-
-        if(contador%20 < 10) TrocaCor(0)
-        else TrocaCor(1)
-            
+        if(contador % 20 == 0) TrocaCor()
 
         if(!bateu(snake, contador)) Start()
         else {
@@ -203,32 +202,10 @@ function Fruit() {
                 area.removeChild(scomida.elemento)
                 s = false
             }
-        }, 5000)
-                
+        }, 5000)                
         
-    }, 10000)
-    
+    }, 10000)    
 }
-
-
-
-// function Fruit() {
-    
-//     const aparece = setTimeout(() => {      
-//         scomida = new SpecialFood(400, 700, 20)
-//         area.appendChild(scomida.elemento)   
-    
-//     }, 5000)
-    
-//     const desaparece = setTimeout(() => {
-//         if(snake.special) {
-//             area.removeChild(scomida.elemento)
-//             snake.special = false
-//         }
-//         Fruit()
-//     }, 10000)
-// }
-
 
 Fruit()
 Start()
