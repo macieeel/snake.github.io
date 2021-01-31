@@ -182,19 +182,29 @@ function Fruit() {
         scomida = new SpecialFood(400, 700, 20)
         area.appendChild(scomida.elemento)
         s = true
+        scomida.elemento.style.visibility = 'visible'
 
-        setInterval(() => {
-            scomida.elemento.style.visibility = 'visible'
-            setTimeout(() => scomida.elemento.style.visibility = 'hidden', 400)
-
-        }, 1000)
-
+        let i = 0
         setTimeout(() => {
-            if (s) {
-                area.removeChild(scomida.elemento)
-                s = false
-            }
-        }, 5000)
+
+            pisca = setInterval(() => {
+
+                scomida.elemento.style.visibility = 'hidden'
+                setTimeout(() => {
+                    scomida.
+                    elemento.style.visibility = 'visible'
+                    i++
+                }, 500)
+                if(i == 3) {
+                    if(s) {
+                        area.removeChild(scomida.elemento)
+                        s = false
+                    }
+                    clearInterval(pisca)
+                }
+            }, 1000)
+            
+        }, 1000)
 
     }, 10000)
 }
@@ -206,22 +216,29 @@ function Points() {
 
     if (contador > highscore) {
         highscore = contador
+
         if (first) {
             first = false
 
-                document.body.style.background = 'red'
-                document.querySelector('.recorde').style.opacity = 1
-                setTimeout(() => {
-                    document.body.style.background = contador % 40 > 19 ? 'white' : 'black'
-                    document.querySelector('.recorde').style.opacity = 0
-                }, 1500)
+            document.body.style.background = 'red'
+            document.querySelector('.recorde').style.opacity = 1
+            if(contador % 40 > 19) document.querySelector('.recorde').style.color = 'black'
+
+            setTimeout(() => {
+                document.body.style.background = contador % 40 > 19 ? 'white' : 'black'
+                document.querySelector('.recorde').style.opacity = 0
+            }, 2000)
+
+            setTimeout(() => {
+                document.querySelector('.recorde').style.opacity = 0
+            }, 1500)
 
 
         }
     }
 }
 
-let fruit
+let fruit, pisca
 let s = false
 let contador = 0
 let highscore = 0
@@ -245,7 +262,7 @@ function Restart() {
 
     const cobra = document.querySelectorAll('.snake')
     cobra.forEach(element => area.removeChild(element))
-    area.removeChild(food.elemento)            
+    area.removeChild(food.elemento)         
 
     window.addEventListener('keyup', teste)
 }
